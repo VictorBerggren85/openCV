@@ -1,8 +1,8 @@
 # openCV
 Some openCV projects
-
-Prerequisites:
-  1  cv2 (OpenCV)
-  2  face_recognition
-     pickle
+<br><br>
+Prerequisites:<br>
+  1  cv2 (OpenCV)<br>
+  2  face_recognition<br>
+     pickle<br>
   3  ...
