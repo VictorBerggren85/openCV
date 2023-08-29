@@ -1,0 +1,2 @@
+# openCV
+Some openCV projects
