@@ -186,6 +186,96 @@ class Cam:
         self.run=False
         self.cap.release()
 
+class MotorControler:
+    from enum import Enum
+    class Mode(Enum):
+        MANUAL=0
+        AUTONOMOUS=1
+
+    def __init__(
+            self,
+            run=True,
+            moveOffet=10,
+            lowPassFilter=(.25,  #Throughpass
+                           .75), #Oldval
+            mode=Mode.MANUAL):
+        self.mode=mode
+        self.run=run
+        self.lowPassFilter=lowPassFilter
+        self.encoderL=0
+        self.encoderR=0
+        self.motorL=0
+        self.motorR=0
+        self.moveOffet=moveOffet
+        self.motorInc=0
+        self.obstasclePos=(0,0)
+        self.startingPoint=(0,0) #Left,Right motor movement memory
+        self.targetCalculation=0
+        if self.mode==self.Mode.AUTONOMOUS:
+            self.moveThread=t(target=self.continuousMovement,args=(),daemon=True)
+            self.moveThread.start()
+
+    def setlowPassFilter(self,newLow):
+        if newLow<1 and newLow>0:
+            self.lowPassFilter=(newLow,1-newLow)
+        else:
+            print('Info Low pass filter disabled')
+            self.lowPassFilter=(1,0)
+
+    def setMotorInc(self,incrementCalculation):
+        self.motorInc=incrementCalculation
+
+    def getMotorInc(self):
+        return self.motorInc
+
+    def getEncoderValues(self):
+        return (self.encoderL,self.encoderR)
+    
+    def getStartingPoint(self):
+        return self.startingPoint
+    
+    def getLowPassFilter(self):
+        return self.lowPassFilter
+    
+    def continuousMovement(self):
+        while self.run:
+            self.encoderL='todo' #read left encoder
+            self.encoderR='todo' #read right encoder
+
+            obstacleAvoidance=(obstacleStart,ObstacleSize)
+
+            left=self.encoderL-self.motorL
+            if left<(-1*self.moveOffet):    #Turn right
+                pass
+            elif left>self.moveOffet:       #Turn left
+                pass
+            else:                           #Straight ahead
+                pass
+            right=self.encoderR-self.motorR
+            if right<(-1*self.moveOffet):   #Turn left
+                pass    
+            elif right>self.moveOffet:      #Turn right
+                pass
+            else:                           #Straight ahead
+                pass
+
+
+    def moveAutonomous(self,move):
+        left=0  #index
+        right=1 #index
+
+        move[left]=move[left]*self.motorInc
+        move[right]=move[right]*self.motorInc
+
+
+
+    def moveManual(self):
+        pass
+
+    def destroy(self):
+        self.run=False
+        self.moveThread=0
+
 
 class Runner:
     from enum import Enum
@@ -210,12 +300,13 @@ class Runner:
         ACUTE2=2
         OBTUSE2=3
 
-    def __init__(self,width=300,sortNum=12,offsetMargin=10,heldObject=70):
+    def __init__(self,width=300,sortNum=12,offsetMargin=10,heldObject=70,run=True):
         if DEBUGGING:
             self.debugFrame=[]
             self.debugGreenMask=[]
             self.debugRedMask=[]
         self.cam=Cam()
+        self.motorControler=MotorControler()
         self.rotation=(
             0,  #Left num steps
             0)  #Right num steps
@@ -227,8 +318,9 @@ class Runner:
         self.heldObject=heldObject
         self.target=None
         self.state=self.Mode.IDLE
+        self.run=run
         self.startSignal=False
-        self.runThread=t(target=self.run,args=(),daemon=True)
+        self.runThread=t(target=self.runMain,args=(),daemon=True)
         for _ in range(5):
             if self.cam.readSuccess:
                 self.cam.setMaskCreation(True)
@@ -310,9 +402,9 @@ class Runner:
                     print('left '+str(delta))
 
     #Main run sequence
-    def run(self):
+    def runMain(self):
 
-        while True:
+        while self.run:
             if self.state==self.Mode.IDLE:
                 self.idle()
             if self.state==self.Mode.SEARCH1:
@@ -689,6 +781,7 @@ class Runner:
                 self.setState(self.Mode.SEARCH1)
 
     def destroy(self):
+        self.run=False
         self.runThread=0
         self.cam.destroy()
-        
+        self.motorControler.destroy()        
