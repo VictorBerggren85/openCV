@@ -4,7 +4,7 @@ from helperClasses import Cam,Runner
 import numpy as np
 import math
 
-testRunner=Runner()
+testRunner=Runner(cameraSetup=(0,640,360,30),motorControlerSetup=(True,10,.7,(.25,.75),1))
 
 # cam=Cam()
 # while not cam.readSuccess:
@@ -78,28 +78,28 @@ while True:
     # cv.putText(roi,trap,(15,15),1,1,(222,222,222),1,)
     # roi=testRunner.debugFrame
 
-    # ycenterPoint,ytargetOffset,ytargetArea,ytargetSize,ystartPoint=testRunner.cam.getYellowCenter()
-    # gcenterPoint,gtargetOffset,gtargetArea,gtargetSize,gstartPoint=testRunner.cam.getGreenCenter()
-    # rcenterPoint,rtargetOffset,rtargetArea,rtargetSize,rstartPoint=testRunner.cam.getRedCenter()
-    # pt2=(startPoint[0]+targetSize[0],startPoint[1]+targetSize[1])
-    # pt1=(startPoint[0],startPoint[1]+targetSize[1])
-    # cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),pt1,(255,0,0),1)
-    # cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),pt2,(255,0,0),1)
+    ycenterPoint,ytargetOffset,ytargetArea,ytargetSize,ystartPoint=testRunner.cam.getYellowCenter()
+    gcenterPoint,gtargetOffset,gtargetArea,gtargetSize,gstartPoint=testRunner.cam.getGreenCenter()
+    rcenterPoint,rtargetOffset,rtargetArea,rtargetSize,rstartPoint=testRunner.cam.getRedCenter()
+    pt2=(startPoint[0]+targetSize[0],startPoint[1]+targetSize[1])
+    pt1=(startPoint[0],startPoint[1]+targetSize[1])
+    cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),pt1,(255,0,0),1)
+    cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),pt2,(255,0,0),1)
 
-    # ypt2=(ystartPoint[0]+ytargetSize[0],ystartPoint[1]+ytargetSize[1])
-    # ypt1=(ystartPoint[0],ystartPoint[1]+ytargetSize[1])
-    # cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),ypt1,(0,255,255),1)
-    # cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),ypt2,(0,255,255),1)
+    ypt2=(ystartPoint[0]+ytargetSize[0],ystartPoint[1]+ytargetSize[1])
+    ypt1=(ystartPoint[0],ystartPoint[1]+ytargetSize[1])
+    cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),ypt1,(0,255,255),1)
+    cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),ypt2,(0,255,255),1)
 
-    # gpt2=(gstartPoint[0]+gtargetSize[0],gstartPoint[1]+gtargetSize[1])
-    # gpt1=(gstartPoint[0],gstartPoint[1]+gtargetSize[1])
-    # cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),gpt1,(0,255,0),1)
-    # cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),gpt2,(0,255,0),1)
+    gpt2=(gstartPoint[0]+gtargetSize[0],gstartPoint[1]+gtargetSize[1])
+    gpt1=(gstartPoint[0],gstartPoint[1]+gtargetSize[1])
+    cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),gpt1,(0,255,0),1)
+    cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),gpt2,(0,255,0),1)
 
-    # rpt2=(rstartPoint[0]+rtargetSize[0],rstartPoint[1]+rtargetSize[1])
-    # rpt1=(rstartPoint[0],rstartPoint[1]+rtargetSize[1])
-    # cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),rpt1,(0,0,255),1)
-    # cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),rpt2,(0,0,255),1)
+    rpt2=(rstartPoint[0]+rtargetSize[0],rstartPoint[1]+rtargetSize[1])
+    rpt1=(rstartPoint[0],rstartPoint[1]+rtargetSize[1])
+    cv.line(frame,(gCenter[0]-int(testRunner.width*.5),testRunner.cam.height),rpt1,(0,0,255),1)
+    cv.line(frame,(gCenter[0]+int(testRunner.width*.5),testRunner.cam.height),rpt2,(0,0,255),1)
 
     cv.rectangle(
         frame,
@@ -121,5 +121,4 @@ while True:
         print('Quit')
         break
 
-# cam.destroy()
 testRunner.destroy()
